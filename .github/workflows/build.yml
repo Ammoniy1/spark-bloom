@@ -26,7 +26,6 @@ jobs:
       - run: npx jest --ci
 
   android:
-    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,9 +41,15 @@ jobs:
       - run: cp android/app/build/outputs/apk/release/app-release.apk SparkBloom.apk
       - uses: actions/upload-artifact@v4
         with: { name: SparkBloom-android, path: SparkBloom.apk }
+      - name: Publish to "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view latest >/dev/null 2>&1 || gh release create latest --prerelease --title "Spark Bloom — свежая сборка" --notes "APK — для Android, IPA — для iPhone через AltStore/SideStore. Обновляется при каждом изменении." || true
+          gh release upload latest SparkBloom.apk --clobber
 
   ios:
-    needs: check
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -76,18 +81,10 @@ jobs:
           zip -qry SparkBloom.ipa Payload
       - uses: actions/upload-artifact@v4
         with: { name: SparkBloom-ios, path: SparkBloom.ipa }
-
-  release:
-    needs: [android, ios]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-      - name: Publish "latest" release (удобно скачивать прямо с телефона)
+      - name: Publish to "latest" release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release delete latest --yes --cleanup-tag || true
-          gh release create latest --prerelease --title "Spark Bloom — сборка ${{ github.run_number }}" \
-            --notes "Сборка из ${{ github.sha }}. APK — для Android, IPA — для iPhone через AltStore/SideStore." \
-            SparkBloom-android/SparkBloom.apk SparkBloom-ios/SparkBloom.ipa
+          gh release view latest >/dev/null 2>&1 || gh release create latest --prerelease --title "Spark Bloom — свежая сборка" --notes "APK — для Android, IPA — для iPhone через AltStore/SideStore. Обновляется при каждом изменении." || true
+          gh release upload latest SparkBloom.ipa --clobber
