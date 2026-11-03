@@ -12,5 +12,5 @@
     android:widgetCategory="home_screen"
     android:updatePeriodMillis="1800000"
     android:initialLayout="@layout/glance_default_loading_layout"
-    android:previewImage="@drawable/sprout_happy_widget"
+    android:previewImage="@drawable/char_spark_happy"
     android:description="@string/widget_description" />

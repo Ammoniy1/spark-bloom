@@ -5,7 +5,14 @@ import WidgetKit
 /// Пишет в UserDefaults общей App Group и просит WidgetKit перерисовать виджеты.
 @objc(SparkBloomWidgetBridge)
 class SparkBloomWidgetBridge: NSObject {
-  static let appGroup = "group.com.sparkbloom.app"
+  /// См. resolvedAppGroup в виджете: AltStore/SideStore переименовывают группу.
+  static let appGroup: String = {
+    if let groups = Bundle.main.object(forInfoDictionaryKey: "ALTAppGroups") as? [String],
+       let g = groups.first(where: { $0.hasPrefix("group.com.sparkbloom.app") }) ?? groups.first {
+      return g
+    }
+    return "group.com.sparkbloom.app"
+  }()
 
   @objc static func requiresMainQueueSetup() -> Bool { false }
 

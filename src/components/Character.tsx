@@ -69,12 +69,12 @@ export function CharacterView({
 function Halo() {
   const { t } = useTheme();
   return (
-    <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+    <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
       <Defs>
-        <RadialGradient id="halo" cx="50%" cy="38%" rx="50%" ry="42%">
-          <Stop offset="0" stopColor="#ffc95c" stopOpacity={0.22} />
-          <Stop offset="0.6" stopColor={t.accent} stopOpacity={0.06} />
-          <Stop offset="1" stopColor={t.accent} stopOpacity={0} />
+        <RadialGradient id="halo" cx="50%" cy="40%" r="50%" fx="50%" fy="40%">
+          <Stop offset="0" stopColor="#ffc95c" stopOpacity={0.2} />
+          <Stop offset="0.55" stopColor="#ffc95c" stopOpacity={0.05} />
+          <Stop offset="1" stopColor="#ffc95c" stopOpacity={0} />
         </RadialGradient>
       </Defs>
       <Rect width="100%" height="100%" fill="url(#halo)" />

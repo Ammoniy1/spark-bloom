@@ -1,97 +1,32 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Spark Bloom
 
-# Getting Started
+Компаньон для шагов: настроение персонажа зависит от шагов за сегодня, стадия — от серии дней с выполненной целью. React Native (iOS + Android) + нативные виджеты (WidgetKit / Jetpack Glance).
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Сборка
 
-## Step 1: Start Metro
+Каждый пуш в `main` запускает **Actions → Build**:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- `SparkBloom.apk` — Android, ставится напрямую;
+- `SparkBloom.ipa` — iPhone, ставится через AltStore / SideStore.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Готовые файлы — в релизе **latest** (Releases), их удобно скачать прямо с телефона.
 
-```sh
-# Using npm
-npm start
+## Картинки персонажа
 
-# OR using Yarn
-yarn start
-```
+1. Положить PNG в `assets/characters/` с именами `{stage}_{emotion}.png`
+   (stage: ember, spark, glow, blaze, nova; emotion: sad, sleepy, happy, energetic), фон прозрачный, 2:3.
+   Утка — `assets/duck/duck_ember.png`, `duck_{stage}_{emotion}.png`, 1:1.
+2. `node scripts/gen-assets.js` — таблица картинок для приложения.
+3. `python3 scripts/gen-widget-assets.py` — картинки и таблицы для виджетов.
 
-## Step 2: Build and run your app
+Пока каких-то картинок нет, везде показывается ближайшая существующая (в итоге — эталон `spark_happy`).
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## Где что
 
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+| | |
+|---|---|
+| `src/lib/sparkLogic.ts` | пороги стадий/настроений, смена дня (дублируется в `SparkLogic.kt` и `SparkBloomWidget.swift`) |
+| `src/store/useAppStore.ts` | состояние + сохранение + синхронизация с виджетом |
+| `src/screens/` | экраны; скрытый экран разработки — 5 тапов по «Spark Bloom 1.0.0» в More |
+| `android/.../widget/` | Glance-виджет, мост, DataStore |
+| `ios/SparkBloomWidget/` | WidgetKit-виджет; цель в Xcode добавляет `scripts/add-ios-widget-target.rb` при сборке |

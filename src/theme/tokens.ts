@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export type ThemeName = 'dark' | 'light';
 
 export interface ThemeTokens {
@@ -54,5 +56,5 @@ const FONTS_LINKED = false;
 export const fonts = {
   display: FONTS_LINKED ? 'Outfit' : undefined,
   body: FONTS_LINKED ? 'Inter' : undefined,
-  mono: FONTS_LINKED ? 'JetBrainsMono-Regular' : 'Menlo',
+  mono: FONTS_LINKED ? 'JetBrainsMono-Regular' : Platform.select({ ios: 'Menlo', default: 'monospace' }),
 };

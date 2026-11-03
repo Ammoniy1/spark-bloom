@@ -19,7 +19,7 @@ import Icon, { type IconName } from './Icon';
 export function Backdrop() {
   const { t } = useTheme();
   return (
-    <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+    <Svg width="100%" height="100%" style={StyleSheet.absoluteFill} pointerEvents="none">
       <Defs>
         <RadialGradient id="bg" cx="50%" cy="22%" rx="85%" ry="60%">
           <Stop offset="0" stopColor={t.bg2} />
