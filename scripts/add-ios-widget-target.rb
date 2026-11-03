@@ -18,10 +18,14 @@ app = project.targets.find { |t| t.name == 'SparkBloom' } or abort('нет це�
 app_group = project.main_group.find_subpath('SparkBloom', true)
 %w[SparkBloomWidgetBridge.swift SparkBloomWidgetBridge.m].each do |f|
   next if app.source_build_phase.files_references.any? { |r| r.path&.end_with?(f) }
-  ref = app_group.files.find { |r| r.path == f } || app_group.new_reference(f)
+  # в шаблоне RN группа SparkBloom без пути, файлы указаны как SparkBloom/<имя>
+  ref = app_group.files.find { |r| r.path == "SparkBloom/#{f}" } || app_group.new_reference("SparkBloom/#{f}")
+  ref.name = f
   app.add_file_references([ref])
 end
-app_group.new_reference('SparkBloom.entitlements') unless app_group.files.any? { |r| r.path == 'SparkBloom.entitlements' }
+unless app_group.files.any? { |r| r.path == 'SparkBloom/SparkBloom.entitlements' }
+  app_group.new_reference('SparkBloom/SparkBloom.entitlements').name = 'SparkBloom.entitlements'
+end
 app.build_configurations.each do |c|
   c.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'SparkBloom/SparkBloom.entitlements'
   c.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = APP_ID
